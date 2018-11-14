@@ -17,6 +17,16 @@ port=<%= @port %>
 debug=<%= @debug %>
 
 kafkastore.connection.url=<%= @kafkastore_connection_url %>
+<% if @zk_namespace -%>
+schema.registry.zk.namespace=<%= @zk_namespace %>
+<% end -%>
+<% if @group_id -%>
+schema.registry.group.id=<%= @group_id %>
+<% end -%>
+master.eligibility=<%= @master_eligibility %>
+unclean.leader.election.enable=<%= @unclean_leader_election_enable %>
+schema.registry.group.id=<%= @group_id %>
+
 kafkastore.topic=<%= @kafkastore_topic %>
 kafkastore.topic.replication.factor=<%= @kafkastore_topic_replication_factor %>
 kafkastore.commit.interval.ms=<%= @kafkastore_commit_interval_ms %>
