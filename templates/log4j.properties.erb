@@ -1,7 +1,7 @@
 # managed by puppet
 schema-registry.logs.dir=<%= scope.lookupvar('confluent_schema_registry::app_log_dir') %>
 
-log4j.rootLogger=INFO, stdout
+log4j.rootLogger=INFO, file
 
 log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
