@@ -1,11 +1,12 @@
+# Setup configuration files for Schema Registry
 class confluent_schema_registry::config (
   $port                                = '8081',
-  $debug                               = 'false',
+  $debug                               = false,
   $kafkastore_connection_url           = 'localhost:2181',
-  $zk_namespace                        = undef,
-  $group_id                            = undef,
-  $master_eligibility                  = 'true',
-  $unclean_leader_election_enable      = 'false',
+  $zk_namespace                        = $confluent_schema_registry::zk_namespace,
+  $group_id                            = $confluent_schema_registry::group_id,
+  $master_eligibility                  = true,
+  $unclean_leader_election_enable      = false,
   $kafkastore_topic                    = '_schemas',
   $kafkastore_topic_replication_factor = '3',
   $kafkastore_commit_interval_ms       = '-1',
