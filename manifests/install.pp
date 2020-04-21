@@ -1,53 +1,28 @@
 # Class to install packages and optionally setup repos to fetch them from.
 class confluent_schema_registry::install {
-  case $::osfamily {
-    'Debian': {
-      if $::confluent_kafka::manage_repo and !defined(Apt::Source['confluent']) {
 
-        include apt
+  include apt
 
-        apt::source { 'confluent':
-          location          => "http://packages.confluent.io/deb/${confluent_schema_registry::confluent_release}",
-          release           => 'stable main',
-          architecture      => 'all',
-          repos             => '',
-          required_packages => 'debian-keyring debian-archive-keyring',
-          key               => {
-            'id'     => '1A77041E0314E6C5A486524E670540C841468433',
-            'source' => "http://packages.confluent.io/deb/${confluent_schema_registry::confluent_release}/archive.key",
-          },
-          include           => {
-            'deb' => true,
-            'src' => false,
-          },
-        }
-      }
+  apt::source { 'confluent':
+    location          => "http://packages.confluent.io/deb/${confluent_schema_registry::confluent_release}",
+    release           => 'stable main',
+    architecture      => 'all',
+    repos             => '',
+    required_packages => 'debian-keyring debian-archive-keyring',
+    key               => {
+      'id'     => '1A77041E0314E6C5A486524E670540C841468433',
+      'source' => "http://packages.confluent.io/deb/${confluent_schema_registry::confluent_release}/archive.key",
+    },
+    include           => {
+      'deb' => true,
+      'src' => false,
+    },
+  }
 
-      apt::pin { 'confluent-schema-registry':
-        packages => ['confluent-schema-registry','confluent-common','confluent-rest-utils'],
-        version  => $confluent_schema_registry::version,
-        priority => 1000,
-      }
-    }
-
-    'RedHat', 'CentOS': {
-      if $::confluent_kafka::manage_repo {
-        exec {
-          "sudo rpm --import https://packages.confluent.io/rpm/${$confluent_schema_registry::confluent_release}/archive.key":
-        }
-        file {'/etc/yum.repos.d/confluent.repo':
-          ensure  => present,
-          content => epp('confluent_schema_registry/redhat/confluent.repo', $confluent_schema_registry::confluent_release),
-        }
-      }
-    }
-
-    default: {
-      if $::confluent_kafka::manage_repo {
-        notify{ 'We only support Debian or Redhat based systems.':}
-      }
-    }
-
+  -> apt::pin { 'confluent-schema-registry':
+    packages => ['confluent-schema-registry','confluent-common','confluent-rest-utils'],
+    version  => $confluent_schema_registry::version,
+    priority => 1000,
   }
 
   package { ['confluent-schema-registry','confluent-common','confluent-rest-utils']:
